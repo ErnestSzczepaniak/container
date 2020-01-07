@@ -167,6 +167,10 @@ typename Map<T, items, K>::Result Map<T, items, K>::pop()
     {
         return {0, {}};
     }
+    else
+    {
+        return {{}, {}};
+    }
 }
 
 template<typename T, int items, typename K>
@@ -195,6 +199,10 @@ typename Map<T, items, K>::Result Map<T, items, K>::remove(K key)
     else if constexpr (same_type<K, int>::value)
     {
         return {0, {}};
+    }
+    else
+    {
+        return {{}, {}};
     }
 }
 
@@ -260,7 +268,7 @@ bool Map<T, items, K>::_node_matches_key(Node * resident, K key)
     {
         return (strcmp(resident->key, key) == 0);
     }
-    else if constexpr (same_type<K, int>::value)
+    else
     {   
         return (resident->key == key);
     }
