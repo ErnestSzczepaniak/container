@@ -2,28 +2,16 @@
 #define _map_h
 
 #include "string.h"
-
-enum class Map_order
-{
-    UNORDERED = 0,
-    DESCENDING,
-    ASCENDING
-};
-
-template<typename T, typename U>
-struct same_type {static constexpr bool value = false;};
-
-template<typename T>
-struct same_type<T, T> {static constexpr bool value = true;};
+#include <type_traits>
 
 template<typename T = int, int items = 32, typename K = const char *>
 class Map
 {
-    struct Node {bool is_empty; K key; int priority; T item; Node * previous; Node * next;};
+    struct Node {bool is_empty; K key; T item; Node * previous; Node * next;};
     struct Result {K key; T item;};
 
 public:
-    Map(Map_order order = Map_order::UNORDERED);
+    Map();
     ~Map();
 
     int size_actual();
@@ -32,7 +20,7 @@ public:
     bool is_empty();
     bool is_full();
 
-    bool add(K key, const T & item, int priority = 0);
+    bool add(K key, const T & item);
     bool has(K key);
     T * peek(K key);
     Result remove(K key);
@@ -57,18 +45,15 @@ private:
     Node * _head;
     Node _node[items];
     int _size_actual;
-
-    Map_order _order;
 };
 
 //---------------------------------------------| info |---------------------------------------------//
 
 template<typename T, int items, typename K>
-Map<T, items, K>::Map(Map_order order)
+Map<T, items, K>::Map()
 :
 _head(nullptr), 
-_size_actual(0),
-_order(order)
+_size_actual(0)
 {
     for (int i = 0; i < items; i++) _node[i].is_empty = true;
 }
@@ -104,11 +89,10 @@ bool Map<T, items, K>::is_full()
 }
 
 template<typename T, int items, typename K>
-bool Map<T, items, K>::add(K key, const T & item, int priority)
+bool Map<T, items, K>::add(K key, const T & item)
 {
     if (auto * node = _node_find(key); node != nullptr)
     {
-        node->priority = priority;
         node->item = item;
 
         if (_head != nullptr)
@@ -117,20 +101,13 @@ bool Map<T, items, K>::add(K key, const T & item, int priority)
 
             while(true)
             {
-                if (_is_more_important(current, node))
+                if (current->next == nullptr)
                 {
-                    _node_attach_before(current, node); break;
+                    _node_attach_after(current, node); break;
                 }
                 else
                 {
-                    if (current->next == nullptr)
-                    {
-                        _node_attach_after(current, node); break;
-                    }
-                    else
-                    {
-                        current = current->next;
-                    }
+                    current = current->next;
                 }
             }
         }
@@ -159,11 +136,11 @@ typename Map<T, items, K>::Result Map<T, items, K>::pop()
         return {key, result};
     }
 
-    if constexpr (same_type<K, const char *>::value)
+    if constexpr (std::is_same_v<K, const char *>)
     {
         return {nullptr, {}};
     }
-    else if constexpr (same_type<K, int>::value)
+    else if constexpr (std::is_same_v<K, int>)
     {
         return {0, {}};
     }
@@ -192,11 +169,11 @@ typename Map<T, items, K>::Result Map<T, items, K>::remove(K key)
         else current = current->next;
     }
 
-    if constexpr (same_type<K, const char *>::value)
+    if constexpr (std::is_same_v<K, const char *>)
     {
         return {nullptr, {}};
     }
-    else if constexpr (same_type<K, int>::value)
+    else if constexpr (std::is_same_v<K, int>)
     {
         return {0, {}};
     }
@@ -264,7 +241,7 @@ bool Map<T, items, K>::has(K key)
 template<typename T, int items, typename K>
 bool Map<T, items, K>::_node_matches_key(Node * resident, K key)
 {
-    if constexpr (same_type<K, const char *>::value)
+    if constexpr (std::is_same_v<K, const char *>)
     {
         return (strcmp(resident->key, key) == 0);
     }
@@ -301,50 +278,10 @@ typename Map<T, items, K>::Node * Map<T, items, K>::_node_find(K key)
 }
 
 template<typename T, int items, typename K>
-bool Map<T, items, K>::_is_more_important(Node * resident, Node * candidate)
-{
-    if (_order == Map_order::UNORDERED)
-    {
-        return true;
-    }
-    if (_order == Map_order::DESCENDING)
-    {
-        return (candidate->priority > resident->priority);
-    }
-    else if (_order == Map_order::ASCENDING)
-    {
-        return (candidate->priority < resident->priority);
-    }
-
-    return true;
-}
-
-template<typename T, int items, typename K>
 void Map<T, items, K>::_node_attach_after(Node * resident, Node * candidate)
 {
 	candidate->previous = resident;
 	resident->next = candidate;
-
-    _size_actual++;
-}
-
-template<typename T, int items, typename K>
-void Map<T, items, K>::_node_attach_before(Node * resident, Node * candidate)
-{
-	if (resident->previous != nullptr)
-	{
-		resident->previous->next = candidate;
-		candidate->previous = resident->previous;
-
-		candidate->next = resident;
-		resident->previous = candidate;
-	}
-	else
-	{
-		_head = candidate;
-		candidate->next = resident;
-		resident->previous = candidate;
-	}
 
     _size_actual++;
 }
