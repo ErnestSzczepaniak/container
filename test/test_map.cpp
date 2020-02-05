@@ -2,6 +2,7 @@
 #include "map.h"
 #include "priority_named_map.h"
 #include "quantum_map.h"
+#include "pointer_map.h"
 
 struct Thread
 {
