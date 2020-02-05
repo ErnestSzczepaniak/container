@@ -35,8 +35,6 @@ protected:
     inline bool _node_matches_key(Node * resident, K key);
     inline Node * _node_find(K key);
 
-    inline bool _is_more_important(Node * resident, Node * candidate);
-
     inline void _node_attach_after(Node * resident, Node * candidate);
     inline void _node_attach_before(Node * resident, Node * candidate);
     inline void _node_deattach(Node * resident);
