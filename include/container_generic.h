@@ -27,4 +27,4 @@ protected:
 
 }; /* class: Container_generic */
 
-#endif /*define: container_generic_h*/
+#endif /* define: container_generic_h */
