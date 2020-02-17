@@ -30,7 +30,7 @@ private:
 }; /* class: Iterator */
 
 template<typename T, int size>
-Iterator<T, size>::Iterator(T * data, int position, int full)
+Iterator<T, size>::Iterator(T * data, int position, bool full)
 :
 _data(data),
 _position(position),

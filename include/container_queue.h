@@ -27,8 +27,8 @@ public:
     const T & front();
     const T & back();
 
-    Iterator<T, size> begin() { return {_item, __index_front};}
-    Iterator<T, size> end() { return {_item, _head};}
+    Iterator<T, size> begin() { return {_item, __index_front, false};}
+    Iterator<T, size> end() { return {_item, _head, true};}
 
 protected:
     
