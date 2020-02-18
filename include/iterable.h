@@ -32,12 +32,8 @@ public:
     Iterable();
     ~Iterable();
 
-    const T & front();
-    const T & back();
-
     Iterator<C, T> begin();
     Iterator<C, T> end();
-
 
 }; /* class: Iterable */
 
@@ -73,7 +69,7 @@ bool Iterator<C, T>::operator!=(const Iterator<C, T> & rhs)
 template<typename C, typename T>
 const T & Iterator<C, T>::operator*()
 {
-    return _child->at(_iterator);
+    return _child->operator[](_iterator);
 }
 
 //---------------------------------------------| info |---------------------------------------------//
@@ -88,20 +84,6 @@ template<typename C, typename T>
 Iterable<C, T>::~Iterable()
 {
 
-}
-
-template<typename C, typename T>
-const T & Iterable<C, T>::front()
-{
-        auto * child = static_cast<C *>(this);
-        return child->at(child->index_front());
-}
-
-template<typename C, typename T>
-const T & Iterable<C, T>::back()
-{
-        auto * child = static_cast<C *>(this);
-        return child->at(child->index_back());
 }
 
 template<typename C, typename T>
