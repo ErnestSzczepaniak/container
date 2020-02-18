@@ -20,6 +20,9 @@ public:
     bool is_empty();
     bool is_full();
 
+    virtual int index_front() = 0;
+    virtual int index_back() = 0;
+
 protected:
     int _size_actual;
     int _size_max;
