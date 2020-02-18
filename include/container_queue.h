@@ -11,9 +11,6 @@
 #include "container_generic.h"
 #include "iterable.h"
 
-#define __index_front ((_head >= _size_actual) ? _head - _size_actual : _head + size - _size_actual)
-#define __index_back (_head != 0 ? _head - 1 : size - 1)
-
 template<typename T = int, int size = 32>
 class Container_queue : public Container_generic, public Iterable<Container_queue<T, size>, T>
 {
@@ -25,8 +22,8 @@ public:
     void pop();
 
     const T & at(int index);
-    int index_front() {return __index_front;}
-    int index_back() {return __index_back;}
+    int index_front();
+    int index_back();
 
 private:
     T _item[size];
@@ -67,7 +64,19 @@ void Container_queue<T, size>::pop()
 template<typename T, int size>
 const T & Container_queue<T, size>::at(int index)
 {
-    return _item[(__index_front + index) % size];
+    return _item[(index_front() + index) % size];
+}
+
+template<typename T, int size>
+int Container_queue<T, size>::index_front()
+{
+    return (_head >= _size_actual) ? _head - _size_actual : _head + size - _size_actual;
+}
+
+template<typename T, int size>
+int Container_queue<T, size>::index_back()
+{
+    return (_head != 0) ? _head - 1 : size - 1;
 }
 
 #endif /*define: container_queue_h*/
