@@ -15,9 +15,14 @@ TEST_CASE("dw")
         q.pop();
     }
 
-    for (int i = 0; i < 4; i++)
+    for (int i = 0; i < 6; i++)
     {
         q.push(i);
+    }
+
+    for (auto && a : q)
+    {
+        printf("a =  %d\n", a);
     }
 
     // for (int i = 0; i < 10; i++)
@@ -41,9 +46,9 @@ TEST_CASE("dw")
     //     REQUIRE(a3 == 3);
     // }
 
-    for (auto a : q)
-    {
-        printf("a =  %d\n", a);
-    }
+    // for (auto a : q)
+    // {
+    //     printf("a =  %d\n", a);
+    // }
 
 }

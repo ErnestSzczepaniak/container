@@ -9,33 +9,25 @@
 */
 
 #include "container_generic.h"
-#include "container_iterator.h"
+#include "iterable.h"
 
 #define __index_front ((_head >= _size_actual) ? _head - _size_actual : _head + size - _size_actual)
-#define __index_back (_head != 0 ? _head - 1 : size - 1)
+#define __index_back ((_head != 0) ? _head - 1 : size - 1)
 
 template<typename T = int, int size = 32>
-class Container_queue : public Container_generic
+class Container_queue : public Container_generic, public Iterable<Container_queue<T, size>, T>
 {
 public:
     Container_queue();
     ~Container_queue();
 
     void push(const T & item);
-    void pop();
-
-    const T & front();
-    const T & back();
-
-    Iterator<T, size> begin() { return {_item, __index_front, false};}
-    Iterator<T, size> end() { return {_item, _head, true};}
-
-protected:
+    T pop();
     
+    const T & operator[](int index);
 
 private:
     T _item[size];
-
     int _head;
 
 }; /* class: Container_queue */
@@ -65,21 +57,21 @@ void Container_queue<T, size>::push(const T & item)
 }
 
 template<typename T, int size>
-void Container_queue<T, size>::pop()
+T Container_queue<T, size>::pop()
 {
-    if (_size_actual > 0) _size_actual--;
+    if (_size_actual)
+    {
+        auto temp = _item[__index_back];
+        _size_actual--;
+        return temp;
+    }   
+    else return {};
 }
 
 template<typename T, int size>
-const T & Container_queue<T, size>::front()
+const T & Container_queue<T, size>::operator[](int index)
 {
-    return _item[__index_front];
-}
-
-template<typename T, int size>
-const T & Container_queue<T, size>::back()
-{
-    return _item[__index_back];
+    return _item[(__index_front + index) % size];
 }
 
 #endif /*define: container_queue_h*/
