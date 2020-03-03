@@ -1,3 +1,4 @@
-binary/
-build/
-dump/
+binary/*
+build/*
+dump/*
+doxygen/*
