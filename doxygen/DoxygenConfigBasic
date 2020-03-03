@@ -1,0 +1,6 @@
+PROJECT_NAME            = container
+
+INPUT                   =
+INCLUDE_PATH            = 
+
+@INCLUDE                = ../../designer/DoxygenConfigGeneric

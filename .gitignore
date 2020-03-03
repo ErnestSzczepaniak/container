@@ -1,4 +1,5 @@
 binary/*
 build/*
-dump/*
 doxygen/*
+!doxygen/DoxygenConfigBasic
+dump/*
