@@ -1,3 +1,5 @@
-binary/
-build/
-dump/
+binary/*
+build/*
+doxygen/*
+!doxygen/DoxygenConfigBasic
+dump/*
