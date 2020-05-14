@@ -213,7 +213,8 @@ bool Pointer_map<T, items>::has(const char * name)
 template<typename T, int items>
 bool Pointer_map<T, items>::_node_matches_name(Node * resident, const char * name)
 {
-    return (strcmp(resident->item->name(), name) == 0);
+    return resident->item->name.equals(name);
+    //return (strcmp(resident->item->name(), name) == 0);
 }
 
 template<typename T, int items>
