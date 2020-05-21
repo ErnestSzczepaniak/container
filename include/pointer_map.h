@@ -22,12 +22,13 @@ public:
     bool has(const char * name);
     T * peek(const char * name);
     T * remove(const char * name);
-
     T * pop();
 
     T * at(int index);
     T * front();
     T * back();
+
+    void clear();
 
 protected:
     inline bool _node_matches_name(Node * resident, const char * name);
@@ -208,13 +209,20 @@ bool Pointer_map<T, items>::has(const char * name)
     return false;
 }
 
+template<typename T, int items>
+void Pointer_map<T, items>::clear()
+{
+    for (int i = 0; i < items; i++) _node[i].is_empty = true;
+    _size_actual = 0;
+    _head = nullptr;
+}
+
 //---------------------------------------------| info |---------------------------------------------//
 
 template<typename T, int items>
 bool Pointer_map<T, items>::_node_matches_name(Node * resident, const char * name)
 {
     return resident->item->name.equals(name);
-    //return (strcmp(resident->item->name(), name) == 0);
 }
 
 template<typename T, int items>
